@@ -84,25 +84,6 @@ namespace StringAlgorithms
                                 }
                                 val = s;
                         }
-                        /*String val = st[codeword];
-
-        while (true) {
-            BinaryStdOut.write(val);
-            codeword = BinaryStdIn.readInt(W);
-            if (codeword == R) break;
-            String s = st[codeword];
-            if (i == codeword) s = val + val.charAt(0);   // special case hack
-            if (i < L) st[i++] = val + s.charAt(0);
-            val = s;
-        }
-        BinaryStdOut.close();*/
-
-                        /*
-                        
-                        for(int i = 0; i != compressedData.Length;++i)
-                        {
-                                sb.Append(table[compressedData[i]]);
-                        };*/
                         return sb.ToString();
                 }
         }
