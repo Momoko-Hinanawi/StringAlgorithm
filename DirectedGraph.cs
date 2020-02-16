@@ -43,6 +43,7 @@ namespace GraphDemo
                 {
                         Debug.Assert(v != w, "Self loop is not allowed");// No self-loop
                         Debug.Assert(!IsEdge(v, w), "Parallel edges are not allowed");//No parallel edges
+                        if (w >= vertices) throw new ArgumentException();
                         adj[v].Add(w);
                 }
                 public IEnumerable<int> AdjacentVertices(int v) //adjacent vertices to v

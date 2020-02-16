@@ -61,25 +61,29 @@ namespace StringAlgorithms
                 {
                         throw new NotImplementedException();
                 }
+                public string LongestPrefixOf(string str,int offset)
+                {
+                        return str.Substring(offset,longestPrefixOf(str, offset,offset, root));
+                }
                 public string LongestPrefixOf(string str)
                 {
-                        return str.Substring(0,longestPrefixOf(str, 0, root));
+                        return str.Substring(0, longestPrefixOf(str, 0,0, root));
                 }
-                private int longestPrefixOf(string str,int position, Node node)
+                private int longestPrefixOf(string str,int offset,int position, Node node)
                 {
-                        if (node == null) return position;
-                        if (position == str.Length) return position;
+                        if (node == null) return position-offset;
+                        if (position == str.Length) return position-offset;
                         if( str[position] == node.key) //match
                         {
-                                return longestPrefixOf(str, position + 1, node.mChild);
+                                return longestPrefixOf(str,offset, position + 1, node.mChild);
                         }
                         if(str[position] < node.key)
                         {
-                                return longestPrefixOf(str, position, node.lChild);
+                                return longestPrefixOf(str, offset, position, node.lChild);
                         }
                         else
                         {
-                                return longestPrefixOf(str, position, node.rChild);
+                                return longestPrefixOf(str, offset, position, node.rChild);
                         }
                 }
         }

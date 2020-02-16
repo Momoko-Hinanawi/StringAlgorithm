@@ -85,7 +85,7 @@ namespace StringAlgorithms
                                 foreach (var s in states)
                                 {
                                         if (s == M) continue; //accept state will be ignored until the last judgement
-                                        if (re[s] == text[i] || re[i] == '.')  //match transition
+                                        if (re[i] == '.'||re[s] == text[i] )  //match transition
                                         {
                                                 matches.Add(s + 1);
                                         }

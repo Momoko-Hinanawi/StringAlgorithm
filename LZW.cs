@@ -11,32 +11,39 @@ namespace StringAlgorithms
         class LZW //LZW compression
         {
                 public static readonly Int16 R = 256;
-                public static readonly int L = 1023; //dictionary size
-                [NonSerialized] TST<Nullable<Int16> > st = new TST<Nullable<Int16>>();
-                List<Int16> list = new List<short>();
-                string[] table = new string[L];
+                public static readonly int L = 32767; //dictionary size
+                [NonSerialized] TST<Nullable<Int16>> st = new TST<Nullable<Int16>>();
+                [NonSerialized] List<Int16> list = new List<short>();
+                //[NonSerialized] string[] table = new string[L];
+                Int16[] compressedData;
                 public LZW(string input)
                 {
-                        for(Int16 i = 0; i!=R;++i)
+                        for (Int16 i = 0; i != R; ++i)
                         {
                                 st.Put("" + (char)i, i); //convert i to one-length string
-                                table[i] = "" + (char)i;
+                                //table[i] = "" + (char)i;
                         }
-                        Int16 code = Convert.ToInt16( R + 1);
-                        while(input.Length>0)
+                        Int16 code = Convert.ToInt16(R + 1);
+                        int offset = 0;
+                        while (offset != input.Length)
                         {
-                                string s = st.LongestPrefixOf(input);
+                                string s = st.LongestPrefixOf(input, offset);
                                 list.Add((short)st.Get(s));
                                 int t = s.Length;
-                                if(t < input.Length && code < L)
+                                if (t < input.Length && code < L)
                                 {
-                                        table[code] = input.Substring(0, t + 1);
-                                        st.Put(input.Substring(0, t + 1), code); //add new substring to ST
+                                       // table[code] = input.Substring(offset, t + 1);
+                                        st.Put(input.Substring(offset, t + 1), code); //add new substring to ST
                                         ++code;
                                 }
-                                input = input.Substring(t);
-                                
+                                offset += t;
                         }
+                        compressedData = new short[list.Count];
+                        for (int i = 0; i != list.Count; ++i)
+                        {
+                                compressedData[i] = list[i];
+                        }
+
                 }
                 public void Serialize(string fileName)
                 {
@@ -47,11 +54,55 @@ namespace StringAlgorithms
                 }
                 public string Decompress()
                 {
-                        StringBuilder sb = new StringBuilder();
-                        foreach(var i in list)
+                        if (compressedData.Length == 0) return "";
+                        string[] table = new string[L];
+                        int offset = 0;
+                       
+                        for (Int16 i = 0; i != R; ++i)
                         {
-                                sb.Append(table[i]);
+                                table[i] = "" + (char)i;
                         }
+                        StringBuilder sb = new StringBuilder();
+                        int position = 0;
+                        Int16 code = Convert.ToInt16(R + 1); //current code that will be assigned
+                        int codeword = compressedData[position];
+                        string val = table[codeword];
+                        while(true)
+                        {
+                                sb.Append(val);
+                                ++position;
+                                if (position >= compressedData.Length) break;
+                                codeword = compressedData[position];
+                                string s = table[codeword];
+                                if(code == codeword) //special case
+                                {
+                                        s = val + val[0];
+                                }
+                                if(code < L)
+                                {
+                                        table[code++] = val + s[0];
+                                }
+                                val = s;
+                        }
+                        /*String val = st[codeword];
+
+        while (true) {
+            BinaryStdOut.write(val);
+            codeword = BinaryStdIn.readInt(W);
+            if (codeword == R) break;
+            String s = st[codeword];
+            if (i == codeword) s = val + val.charAt(0);   // special case hack
+            if (i < L) st[i++] = val + s.charAt(0);
+            val = s;
+        }
+        BinaryStdOut.close();*/
+
+                        /*
+                        
+                        for(int i = 0; i != compressedData.Length;++i)
+                        {
+                                sb.Append(table[compressedData[i]]);
+                        };*/
                         return sb.ToString();
                 }
         }

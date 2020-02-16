@@ -11,7 +11,7 @@ namespace StringAlgorithms
         {
                 public static void TestTST()
                 {
-                        TST<int> tree = new TST<int>();
+                        TST<Nullable<Int16>> tree = new TST<Nullable<Int16>>();
                         tree.Put("s", 1);
                         tree.Put("sak", 2);
                         tree.Put("hongshan", 3);
@@ -21,12 +21,12 @@ namespace StringAlgorithms
                         tree.Put("toronto", 7);
                         Console.WriteLine(tree.Get("ss"));
                         Console.WriteLine(tree.Get("s"));
-                        Console.WriteLine(tree.LongestPrefixOf("serbia"));
+                        Console.WriteLine(tree.LongestPrefixOf("waserbia",2));
                         Console.WriteLine(tree.LongestPrefixOf("sz"));
                         Console.WriteLine(tree.LongestPrefixOf("hongshanGuo"));
                         
                 }
-                public void TestRWay()
+                public static void TestRWay()
                 {
                         RWayTrie<int> rWayTrie = new RWayTrie<int>();
                         rWayTrie.Put("SzmithRandir", 1);
@@ -42,7 +42,7 @@ namespace StringAlgorithms
                                 Console.WriteLine(s);
                         }
                 }
-                public void TestNFA()
+                public static void TestNFA()
                 {
                         NFA n = new NFA("((A*B|AC|A*C|C)D)");
                         Console.WriteLine(n.Accept("AAABD"));
@@ -50,10 +50,11 @@ namespace StringAlgorithms
                         Console.WriteLine(n.Accept("AAAB"));
                         Console.WriteLine(n.Accept("ACD"));
                 }
-                public static void Main(string[] args)
+                public static void TestLZW()
                 {
                         string s = File.ReadAllText("test.txt");
                         LZW lzw = new LZW(s);
+                       
                         Console.WriteLine("Compress finished");
                         lzw.Serialize("Compressed.bin");
                         var stream = new FileStream("Compressed.bin",FileMode.Open,FileAccess.Read);
@@ -62,6 +63,11 @@ namespace StringAlgorithms
                         StreamWriter writer = new StreamWriter(File.OpenWrite("DecbyLZW.txt"));
                         writer.Write(obj.Decompress());
                         writer.Flush();
+                }
+                public static void Main()
+                {
+                        TestLZW();
+         
                 }
         }
 }
